@@ -1,0 +1,25 @@
+{
+    "name": "Search Projects",
+    "description": "Sample Projects that queries record count",
+    "namespace": "SP\\ExternalModule",
+    "framework-version": 3,
+    "permissions": [
+        "redcap_every_page_top"
+    ],
+    "authors": [
+        {
+            "name": "Michael Bentz",
+            "email": "mbentz@ufl.edu",
+            "institution": "University of Florida - CTSI"
+        }
+    ],
+    "links": {
+        "project": [
+            {
+               "name": "Search Project",
+               "icon": "fas fa-search",
+               "url": "pages/index.php"
+            }
+         ]
+    }
+}
