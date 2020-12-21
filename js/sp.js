@@ -1,46 +1,105 @@
 $(document).ready(function () {
-  var module = ExternalModules['SP'].ExternalModule;
-  // module.log('hello from js');
-  console.log(module);
-  console.log(module.tt('ajaxPage'));
+  // <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+  // TODO: Replace hardcoding with possible PHP variable
+  const fEvents = 'getEvents';
+  const fModules = 'getExternalModules';
+  const fProjects = 'getProjects';
+  const fTemplates = 'getTemplates';
+  const headerMapping = {}
+  headerMapping[fEvents] = [];
+  headerMapping[fModules] = [
+    {key: 'external_module_id', alias: 'External Module ID'},
+    {key:'directory_prefix', alias: 'Directory Prefix'}
+  ];
+  headerMapping[fProjects] = [
+    {key: 'project_id', alias: 'Project ID'},
+    {key: 'project_name', alias: 'Project Name'}
+  ];
+  headerMapping[fTemplates] = [];
 
-  const App = {
+  const app = {
     data() {
       return {
-        counter: 0
+        currentParams: {
+          data: '',
+          function: '',
+          pid: 14,
+        },
+        initiatedRequest: false,
+        handlerFunctions : [
+          {'key': fEvents, 'alias': 'Events'},
+          { 'key': fModules, 'alias': 'Modules' },
+          { 'key': fProjects, 'alias': 'Projects' },
+          { 'key': fTemplates, 'alias': 'Templates' },
+        ],
+        module: ExternalModules['SP'].ExternalModule,
+        response: {
+          'body': '',
+          'statusCode': '',
+        },
+      }
+    },
+    computed: {
+      getMapping: function() {
+        var temp = headerMapping[this.currentParams.function];
+        return temp;
+      },
+      isLoading: function() {
+        return this.initiatedRequest;
+      },
+      missingData: function() {
+        return this.currentParams.function == "";
+      },
+      // TODO: Update to local variable, this is no longer in the URL the plugin lives outside the project context
+      pid: function() {
+        return this.urlParam('pid');
+      },
+      url: function() {
+        var url = unescape(this.module.tt('ajaxPage').replaceAll('"', ""));
+        console.log(url);
+        return url;
       }
     },
     methods: {
-      increment: function () {
-        this.counter++;
+      clear: function() {
+        this.data = '';
       },
-      testRedCapCall: function () {
-        var value = unescape(module.tt('ajaxPage'));
+      getData: function () {
+        var self = this;
+        self.initiatedRequest = true;
         $.get({
-          url: value.replace('"',""),
-          data: {
-            function: 'sampleFunction',
-            data: 'Hello from JS'
-          },
-        })
-          .done(function (data) {
-            if (data.errors) {
-              // TODO: parse and report errors
-              return 0;
-            }
-            console.log(data);
-            // location.reload();
-
-            // // TODO: consider re-enabling this if targeting an event and the migration was successfull
-            // //if (deleteSourceData /* && entireEvent */) {
-            // //    doDeleteEventInstance(sourceEventId); // reloads page on completion
-            // //} else {
-            // //    location.reload();
-            // //}
-          });
+          url: self.url,
+          data: {...self.currentParams}
+        }).done(function (response) {
+          response = self.parseJSON(response);
+          if (response.error) {
+            return 0;
+          }
+          self.initiatedRequest = false;
+          self.response['body'] = response.data;
+          self.data = response.data;
+          console.log('received data:');
+          console.log(typeof self.data, self.data);
+        });
+      },
+      parseJSON(json) {
+        try {
+          return JSON.parse(json);
+        } catch(err) {
+          console.log("Error occurred for: " + json);
+          console.log("With error: " + err);
+          this.initiatedRequest = false;
+        }
+      },
+      updateParams(params) {
+        this.currentParams = { ...this.currentParams, ...params }
+      },
+      urlParam: function(key) {
+        const queryString = window.location.search;
+        return new URLSearchParams(queryString).get(key);
       }
     }
   }
 
-  Vue.createApp(App).mount('#app');
+  Vue.createApp(app).mount('#app');
 });

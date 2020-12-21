@@ -1,8 +1,8 @@
 <?php
-require_once APP_PATH_DOCROOT . 'ProjectGeneral/header.php';
+require_once APP_PATH_DOCROOT . 'ControlCenter/header.php';
 
-$projects = array(14);
-REDCap::allowProjects($projects);
+// $projects = array(14);
+// REDCap::allowProjects($projects);
 
 $title = RCView::img(['src' => APP_PATH_IMAGES . 'bell.png']) . ' ' . REDCap::escapeHtml('Control Center Page');
 // $element = RCView::h4(['id' => 'app'], $title);
@@ -10,4 +10,4 @@ $title = RCView::img(['src' => APP_PATH_IMAGES . 'bell.png']) . ' ' . REDCap::es
 
 $module->renderHTML();
 
-require_once APP_PATH_DOCROOT . 'ProjectGeneral/footer.php';
+require_once APP_PATH_DOCROOT . 'ControlCenter/footer.php';

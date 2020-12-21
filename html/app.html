@@ -1,12 +1,55 @@
 <div id="app">
-    Counter: {{ counter }}
-    <button v-on:click="increment">Increment</button>
-    <div>
-      <p class="text-lg">
-        Hello there
-      </p>
-    </div>
-    <button v-on:click="testRedCapCall">
-      Search for project
-    </button>
+  <div class="flex flex-col space-y-2">
+    <!-- <section id="tailwind_sample" class="flex flex-row">
+      <button class="bg-blue-500 px-4 py-2 text-white border-2 border-blue-500 rounded">Filled</button>
+      <button class="text-blue-500 px-4 py-2 border-2 border-blue-500 rounded">Outlined</button>
+      <button class="bg-blue-500 rounded-full h-12 w-12 justify-center items-center">
+        <div class="fas fa-search fa-lg text-white"></div>
+      </button>
+      <button class="flex justify-between items-center bg-blue-500 text-white">
+        <i class="p-2 fas fa-search"></i>
+        <span class="p-2">Search</span>
+      </button>
+    </section> -->
+    <section id="request_info_metadata">
+      <span>Send requests to: {{ url }}</span>
+      <span>Params: {{ currentParams }} </span>
+      <!-- <button v-on:click="getUsers">
+        Get project users
+      </button>
+      <button v-on:click="getAllData">
+        Get All Data
+      </button> -->
+    </section>
+    <section id="search_bar" class="flex items-center space-x-1">
+      <input v-model="currentParams.function" class="flex-auto border-2 border-grey-400 rounded p-2" type="search" name="" id="">
+      <label for="types">Search for:</label>
+      <select v-model="currentParams.function" name="types" id="types">
+        <option v-bind:value="type.key" v-for="type in handlerFunctions"> {{ type.alias }} </option>
+      </select>
+      <!-- TODO: Add styles to disabled elements -->
+      <button :disabled="missingData" v-on:click="getData" class="rounded text-blue-500 p-2 border-2 border-blue-500">
+        <i v-on:click="getData" class="fas fa-search"></i>
+      </button>
+      <button v-on:click="clear" class="rounded text-red-300 p-2 border-2 border-red-300">
+        <i v-on:click="clear" class="fas fa-eraser"></i>
+      </button>
+    </section>
+    <section id="data">
+      <div v-if="!isLoading">
+        <div class="flex flex-col">
+          <p class="text-lg">
+            <!-- <span> {{ data }} </span> -->
+            <div v-for="entry in response.body">
+              <span v-for="mapping in getMapping"> {{ mapping['alias'] }} : {{ entry[mapping['key']] }} </span>
+            </div>
+          </p>
+        </div>
+      </div>
+      <div v-if="isLoading">
+        <div>Loading...</div>
+      </div>
+    </section>
+    
+  </div>
 </div>
