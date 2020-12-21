@@ -14,9 +14,9 @@
         }
     ],
     "links": {
-        "project": [
+        "control-center": [
             {
-               "name": "Search Project",
+               "name": "Search",
                "icon": "fas fa-search",
                "url": "pages/index.php"
             }
