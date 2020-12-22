@@ -13,11 +13,17 @@ $EM = new ExternalModule();
 
 // TODO: Figure out how to do this without a switch statement
 switch ($function) {
+    case 'getEvents':
+        $EM->getEvents($data); //, $pid);
+        break;
     case 'getExternalModules':
         $EM->getExternalModules($data); //, $pid);
         break;
     case 'getProjects':
         $EM->getProjects($data); //, $pid);
+        break;
+    case 'getTemplates':
+        $EM->getTemplates($data); //, $pid);
         break;
     case 'getUsers':
         $EM->getUsers($data); //, $pid);
