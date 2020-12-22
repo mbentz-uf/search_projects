@@ -164,7 +164,7 @@ class ExternalModule extends AbstractExternalModule {
         $this->tt_addToJavascriptModuleObject('key', 'value');
         // TODO: This page does not exist from a control center page
         $this->tt_addToJavascriptModuleObject('ajaxPage', json_encode($this->framework->getUrl("handler.php")));
-        $this->includeJs('js/sp.js');
+        $this->includeJs('js/app.js');
         include('html/app.html');
     }
 
