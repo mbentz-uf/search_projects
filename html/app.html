@@ -31,7 +31,6 @@
               {{ title }}
             </v-tab>
           </v-tabs>
-      
           <v-tabs-items v-model="tab">
             <v-tab-item
               v-for="title in getTabs"
@@ -50,13 +49,25 @@
               <v-data-table
                 :headers="getHeaders"
                 :items="responseData"
-                :items-per-page="10"
+                :items-per-page="5"
                 class="elevation-1"
                 :loading="isLoading"
                 :search="search"
               >
                 <template v-slot:item.url="{ item }">
                   <a :href="item.url" target="_blank">Link</a>
+                </template>
+                <template v-slot:body.append>
+                  <tr>
+                    <td v-for="header in getHeaders"> 
+                      <v-text-field 
+                        v-if="header.filter"
+                        v-model="filterParams[header.value]"
+                        :label="header.filterLabel"
+                      >
+                      </v-text-field>
+                    </td>
+                  </tr>
                 </template>
               </v-data-table>
             </v-tab-item>
