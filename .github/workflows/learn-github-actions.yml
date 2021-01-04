@@ -8,9 +8,9 @@ jobs:
       - uses: php-actions/composer@v5
       - uses: php-actions/phpunit@v2
         with:
-          configuration: /tests/phpunit.xml
-          version: 7.3.25
-      - run: phpunit --testdox tests
+          configuration: ./tests/phpunit.xml
+          # php_version: 7.3.25
+      # - run: phpunit --testdox tests
       # - uses: actions/setup-node@v1
       # - run: npm install -g bats
       # - run: bats -v
