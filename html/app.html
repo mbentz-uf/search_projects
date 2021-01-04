@@ -8,7 +8,7 @@
           text
           type="info">
           <p>Send requests to: {{ url }}</p>
-          <p>Params: {{ currentParams }} </p>
+          <p>Query Params: {{ currentParams }} </p>
         </v-alert>
       </section>
       <section>
@@ -49,10 +49,13 @@
               <v-data-table
                 :headers="getHeaders"
                 :items="responseData"
-                :items-per-page="5"
                 class="elevation-1"
                 :loading="isLoading"
+                hide-default-footer
+                :page.sync="page"
+                :items-per-page="itemsPerPage"
                 :search="search"
+                @page-count="pageCount = $event"
               >
                 <template v-slot:item.url="{ item }">
                   <a :href="item.url" target="_blank">Link</a>
@@ -70,6 +73,21 @@
                   </tr>
                 </template>
               </v-data-table>
+              <div class="text-center pa-2">
+                <v-pagination
+                  v-model="page"
+                  :length="pageCount"
+                  :total-visible="5"
+                ></v-pagination>
+                <v-text-field
+                  :value="itemsPerPage"
+                  label="Items per page"
+                  type="number"
+                  min="1"
+                  max="15"
+                  @input="itemsPerPage = parseInt($event, 10)"
+                ></v-text-field>
+              </div>
             </v-tab-item>
           </v-tabs-items>
         </v-card>

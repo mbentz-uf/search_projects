@@ -26,6 +26,7 @@ $(document).ready(function () {
           user: '',
         },
         initiatedRequest: false,
+        itemsPerPage: 10,
         handlerFunctions: [
           { 'value': fEvents, 'text': 'Events' },
           { 'value': fModules, 'text': 'Modules' },
@@ -34,6 +35,8 @@ $(document).ready(function () {
         ],
         headerMappinp: {},
         module: ExternalModules['SP'].ExternalModule,
+        page: 1,
+        pageCount: 0,
         responseData: [],
         search: '',
         tab: null,
