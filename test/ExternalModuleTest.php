@@ -15,4 +15,9 @@ class ExternalModuleTest extends \ExternalModules\ModuleBaseTest {
         $this->assertSame($expected, $actual1);
         $this->assertSame($expected, $actual2);
     }
+
+    function testGetProjects() {
+        $response = $this->getProjects(1);
+        $this->assertNotEmpty($response);
+    }
 }

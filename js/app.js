@@ -1,8 +1,4 @@
 $(document).ready(function () {
-  // <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
-  // TODO: Replace hardcoding with possible PHP variable
-  // window.$('#data_table').DataTable();
-
   const fEvents = 'getEvents';
   const fModules = 'getExternalModules';
   const fProjects = 'getProjects';
@@ -137,11 +133,6 @@ $(document).ready(function () {
       ];
     },
     computed: {
-      // getTitle: function() {
-      //   for (var i = 0; i < this.handlerFunctions.length; i++) {
-      //     if (this.handlerFunctions[i].value === this.currentParams.function) return this.handlerFunctions[i].text;
-      //   }
-      // },
       contains: function(source, target, options) {
         // TODO : add options for case sensitivity
         // var result = sourceStr.toLowerCase().indexOf(targetStr.toLowerCase()) >= 0;
@@ -167,13 +158,10 @@ $(document).ready(function () {
       isLoading: function() {
         return this.initiatedRequest;
       },
-      // missingData: function () {
-      //   return this.currentParams.function == "";
-      // },
       // TODO: Update to local variable, this is no longer in the URL the plugin lives outside the project context
-      pid: function() {
-        return this.urlParam('pid');
-      },
+      // pid: function() {
+      //   return this.urlParam('pid');
+      // },
       url: function() {
         var url = unescape(this.module.tt('ajaxPage').replaceAll('"', ""));
         console.log(url);
@@ -207,9 +195,6 @@ $(document).ready(function () {
           // console.log(typeof self.responseData, self.responseData);
         });
       },
-      // isLink: function(key) {
-      //   return key === 'url';
-      // },
       parseJSON(json) {
         try {
           return JSON.parse(json);
@@ -219,19 +204,10 @@ $(document).ready(function () {
           this.initiatedRequest = false;
         }
       },
-      remove: function(item) {
-        this.chips.splice(this.chips.indexOf(item), 1)
-        this.chips = [...this.chips]
-      },
-      // updateParams(params) {
-      //   this.currentParams = { ...this.currentParams, ...params }
-      // },
       urlParam: function (key) {
         const queryString = window.location.search;
         return new URLSearchParams(queryString).get(key);
       }
     }
   });
-
-  // Vue.createApp(app).mount('#app');
 });

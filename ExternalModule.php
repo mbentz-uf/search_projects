@@ -17,10 +17,6 @@ class ExternalModule extends AbstractExternalModule {
     // Does not get called for Control Center Plugins
     // Neither does redcap_control_center
     function redcap_every_page_top() {
-        $this->initializeJavascriptModuleObject();
-        $this->tt_addToJavascriptModuleObject('key', 'value');
-        $this->tt_addToJavascriptModuleObject('ajaxPage', json_encode($this->framework->getUrl("handler.php")));
-        
         /*
          * Inline JS
             ?>
@@ -33,14 +29,9 @@ class ExternalModule extends AbstractExternalModule {
             </script>
             <?php
         */
-        // echo '<script src="https://unpkg.com/vue@next";</script>';
-        // echo '<script src="t";<\/script>';
-        
-        
-        // $this->includeJs('js/sp.js');
     }
 
-    function getAllData($data) {
+    function getAllData($data = '') {
         // Create anonymous object
         $response = (object)[];
         try {
@@ -58,7 +49,7 @@ class ExternalModule extends AbstractExternalModule {
         return $val;
     }
 
-    function getEvents($data) {
+    function getEvents($data = '') {
         // Create anonymous object
         $response = (object)[];
         try {
@@ -86,10 +77,13 @@ class ExternalModule extends AbstractExternalModule {
             $response->error = $this->parseException($e);
         }
 
+        // For AJAX call
         echo json_encode($response);
+        // For unit tests
+        return $response;
     }
 
-    function getExternalModules($data) {
+    function getExternalModules($data = '') {
         // Create anonymous object
         $response = (object)[];
         try {
@@ -102,10 +96,13 @@ class ExternalModule extends AbstractExternalModule {
             $response->error = $this->parseException($e);
         }
 
+        // For AJAX call
         echo json_encode($response);
+        // For unit tests
+        return $response;
     }
 
-    function getProjects($data) {
+    function getProjects($data = '') {
         // Create anonymous object
         $response = (object)[];
         try {
@@ -125,10 +122,13 @@ class ExternalModule extends AbstractExternalModule {
             $response->error = $this->parseException($e);
         }
 
+        // For AJAX call
         echo json_encode($response);
+        // For unit tests
+        return $response;
     }
     
-    function getTemplates($data) {
+    function getTemplates($data = '') {
         // Create anonymous object
         $response = (object)[];
         try {
@@ -143,11 +143,14 @@ class ExternalModule extends AbstractExternalModule {
             $response->error = $this->parseException($e);
         }
 
+        // For AJAX call
         echo json_encode($response);
+        // For unit tests
+        return $response;
     }
 
 
-    function getUsers($data) { //, $pid) {
+    function getUsers($data = '') { //, $pid) {
         // TODO: Figure out how to catch the error when getUsers is called without pid context
         // self::checkProjectContext(__METHOD__);
         // register_shutdown_function('shutdown');
@@ -161,32 +164,25 @@ class ExternalModule extends AbstractExternalModule {
             $response->error = $this->parseException($e);
         }
         
+        // For AJAX call
         echo json_encode($response);
+        // For unit tests
+        return $response;
     }
 
     function renderHTML() {
         $this->initializeJavascriptModuleObject();
-        $this->tt_addToJavascriptModuleObject('key', 'value');
         // TODO: This page does not exist from a control center page
         $this->tt_addToJavascriptModuleObject('ajaxPage', json_encode($this->framework->getUrl("handler.php")));
-        $this->includeJs('js/app.js');
+        $this->includeResources('js/app.js');
         include('html/app.html');
     }
 
-    function includeJs($path) {
-        // echo '<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">';
+    function includeResources($path) {
         echo '<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">';
         echo '<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">';
-        // echo '<script src="https://unpkg.com/vue@next"></script>';
-
         echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>';
         echo '<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>';
-
-        // echo '<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">';
-        // echo '<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>';
-
-
-
         echo '<script src="' . $this->getUrl($path) . '"></script>';
     }
 
