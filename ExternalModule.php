@@ -53,6 +53,11 @@ class ExternalModule extends AbstractExternalModule {
         echo json_encode($response);
     }
 
+    // Dummy function for unit tests
+    function getValue($val) {
+        return $val;
+    }
+
     function getEvents($data) {
         // Create anonymous object
         $response = (object)[];
