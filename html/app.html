@@ -9,6 +9,7 @@
           Project {{ currentParams.pid }} Metadata
         </v-card-title>
 
+        <!-- TODO hide indicate if no data is available -->
         <v-card-text>
           {{ dialogResponseData }}
         </v-card-text>
@@ -36,6 +37,7 @@
           type="info">
           <p>Send requests to: {{ url }}</p>
           <p>Query Params: {{ currentParams }} </p>
+          <p>Filter Params: {{ filterParams }} </p>
           <!-- <p>{{ responseData }}</p> -->
         </v-alert>
       </section>
@@ -48,7 +50,7 @@
             </h1>
           </v-card-title>
           <v-tabs
-            @change="updateFunction"
+            @change="focusTab(tab)"
             v-model="tab"
             background-color="transparent"
             grow
@@ -86,8 +88,39 @@
                 :search="search"
                 @page-count="pageCount = $event"
               >
-                <template v-if="title == 'projects'" v-slot:item.project_id="{ item }">
-                  <td v-on:click="showProjectInfo(item.project_id)" class="text-start">{{ item.project_id }}</td>
+                <template v-slot:item.project_id="{ item }">
+                  <td v-if="title === 'projects'" v-on:click="showProjectInfo(item.project_id)" class="text-start">
+                    <v-row
+                      align="center"
+                      justify="space-around"
+                    >
+                      <v-btn
+                        text
+                        color="primary"
+                      >
+                        <v-icon left>
+                          mdi-information-outline
+                        </v-icon>
+                        {{ item.project_id }}
+                      </v-btn>
+                    </v-row>
+                  </td>
+                  <td v-if="title !== 'projects'" v-on:click="focusProjectTab(item.project_id)" class="text-start">
+                    <v-row
+                    align="center"
+                    justify="space-around"
+                  >
+                    <v-btn
+                      text
+                      color="primary"
+                    >
+                      <v-icon left>
+                        mdi-open-in-new
+                      </v-icon>
+                      {{ item.project_id }}
+                    </v-btn>
+                  </v-row>
+                  </td>
                 </template>
                 <template v-slot:item.url="{ item }">
                   <a :href="item.url" target="_blank">Link</a>

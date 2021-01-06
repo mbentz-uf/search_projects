@@ -11,7 +11,6 @@ $(document).ready(function () {
       return {
         currentParams: {
           data: '',
-          dialogFunction: '',
           function: fModules,
           pid: '',
         },
@@ -51,10 +50,10 @@ $(document).ready(function () {
           text: 'Project ID' ,
           filter: value => {
             if (!this.filterParams.project_id) return true;
-            var result = value > this.filterParams.project_id; 
+            var result = value === this.filterParams.project_id; 
             return result;
           },
-          filterLabel: '>'
+          filterLabel: '='
         },
         { 
           value: 'user', 
@@ -174,8 +173,21 @@ $(document).ready(function () {
       }
     },
     methods: {
-      updateFunction: function () {
-        this.currentParams.function = this.handlerFunctions[this.tab].value;
+      getTabIndex: function(text) {
+        for (var i = 0; i < this.handlerFunctions.length; i++) {
+          if (this.handlerFunctions[i].text === text) {
+            return i;
+          }
+        }
+      },
+      focusProjectTab: function(pid) {
+        var tabIndex = this.getTabIndex('projects');
+        this.filterParams.project_id = pid;
+        this.focusTab(tabIndex);
+      },
+      focusTab: function (tabIndex) {
+        this.tab = tabIndex;
+        this.currentParams.function = this.handlerFunctions[tabIndex].value;
         this.responseData = [];
         this.getData({
           data: this.currentParams.data,
