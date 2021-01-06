@@ -41,4 +41,3 @@ switch ($function) {
 // call_user_func_array(array($EM, $function($data)), $data);
 // call_user_func_array("SP\ExternalModule\ExternalModule::" . $function, $data);
 // call_user_func_array($function, $data); 
-?>

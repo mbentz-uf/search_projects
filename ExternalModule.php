@@ -7,16 +7,19 @@ use REDCap;
 use Exception;
 
 const ymdFormat = "%Y-%m-%d";
-class ExternalModule extends AbstractExternalModule {
+class ExternalModule extends AbstractExternalModule
+{
 
     // An attempt at catching the exit() statement for self::checkProjectContext(__METHOD__); 
-    function shutdown() {
+    function shutdown()
+    {
         echo 'Script executed with success', PHP_EOL;
     }
 
     // Does not get called for Control Center Plugins
     // Neither does redcap_control_center
-    function redcap_every_page_top() {
+    function redcap_every_page_top()
+    {
         /*
          * Inline JS
             ?>
@@ -31,11 +34,14 @@ class ExternalModule extends AbstractExternalModule {
         */
     }
 
-    function getAllData($data = '') {
+    function getAllData($data = '')
+    {
         // Create anonymous object
         $response = (object)[];
         try {
-            $data = REDCap::getData('array');
+            // $params = array('return_format' => 'json', 'filterLogic' => '[age] >= 18', 'fields' => array('dob','record_id'));
+            $params = array('return_format' => 'json');
+            $data = REDCap::getData($params);
             $response->data = $data;
         } catch (Exception $e) {
             $response->error = 'Caught exception: ' . $e->getMessage() . "\n";
@@ -45,11 +51,13 @@ class ExternalModule extends AbstractExternalModule {
     }
 
     // Dummy function for unit tests
-    function getValue($val) {
+    function getValue($val)
+    {
         return $val;
     }
 
-    function getEvents($data = '') {
+    function getEvents($data = '')
+    {
         // Create anonymous object
         $response = (object)[];
         try {
@@ -83,7 +91,8 @@ class ExternalModule extends AbstractExternalModule {
         return $response;
     }
 
-    function getExternalModules($data = '') {
+    function getExternalModules($data = '')
+    {
         // Create anonymous object
         $response = (object)[];
         try {
@@ -102,7 +111,8 @@ class ExternalModule extends AbstractExternalModule {
         return $response;
     }
 
-    function getProjects($data = '') {
+    function getProjects($data = '')
+    {
         // Create anonymous object
         $response = (object)[];
         try {
@@ -116,7 +126,7 @@ class ExternalModule extends AbstractExternalModule {
                         date_format(projects.production_time, \"%Y-%m-%d\") as production_time
                     FROM redcap_projects projects
                     ORDER BY project_id asc";
-            $result= $this->framework->query($sql);
+            $result = $this->framework->query($sql);
             $response->data = $result->fetch_all(MYSQLI_ASSOC);
         } catch (Exception $e) {
             $response->error = $this->parseException($e);
@@ -127,8 +137,9 @@ class ExternalModule extends AbstractExternalModule {
         // For unit tests
         return $response;
     }
-    
-    function getTemplates($data = '') {
+
+    function getTemplates($data = '')
+    {
         // Create anonymous object
         $response = (object)[];
         try {
@@ -137,8 +148,8 @@ class ExternalModule extends AbstractExternalModule {
                         title,
                         description
                     FROM redcap_projects_templates";
-           $result = $this->framework->query($sql);
-           $response->data = $result->fetch_all(MYSQLI_ASSOC); 
+            $result = $this->framework->query($sql);
+            $response->data = $result->fetch_all(MYSQLI_ASSOC);
         } catch (Exception $e) {
             $response->error = $this->parseException($e);
         }
@@ -150,11 +161,12 @@ class ExternalModule extends AbstractExternalModule {
     }
 
 
-    function getUsers($data = '') { //, $pid) {
+    function getUsers($data = '')
+    { //, $pid) {
         // TODO: Figure out how to catch the error when getUsers is called without pid context
         // self::checkProjectContext(__METHOD__);
         // register_shutdown_function('shutdown');
-        
+
         // Create anonymous object
         $response = (object)[];
         try {
@@ -163,14 +175,15 @@ class ExternalModule extends AbstractExternalModule {
         } catch (Exception $e) {
             $response->error = $this->parseException($e);
         }
-        
+
         // For AJAX call
         echo json_encode($response);
         // For unit tests
         return $response;
     }
 
-    function renderHTML() {
+    function renderHTML()
+    {
         $this->initializeJavascriptModuleObject();
         // TODO: This page does not exist from a control center page
         $this->tt_addToJavascriptModuleObject('ajaxPage', json_encode($this->framework->getUrl("handler.php")));
@@ -178,7 +191,8 @@ class ExternalModule extends AbstractExternalModule {
         include('html/app.html');
     }
 
-    function includeResources($path) {
+    function includeResources($path)
+    {
         echo '<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">';
         echo '<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">';
         echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>';
@@ -186,7 +200,8 @@ class ExternalModule extends AbstractExternalModule {
         echo '<script src="' . $this->getUrl($path) . '"></script>';
     }
 
-    private function parseException($e) {
-        return 'Caught exception: ' . $e->getMessage() . "\n"; 
+    private function parseException($e)
+    {
+        return 'Caught exception: ' . $e->getMessage() . "\n";
     }
 }
