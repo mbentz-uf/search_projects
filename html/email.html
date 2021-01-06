@@ -1,0 +1,23 @@
+<div id="app">
+  <v-app>
+    <section id="request_info_metadata">
+      <v-alert
+        icon="mdi-information-outline"
+        prominent
+        text
+        type="info">
+        <p>Query Params: {{ currentParams }} </p>
+        <p>Filter Params: {{ filterParams }} </p>
+        <p>Response Data: {{ responseData }} </p>
+        <!-- <p>{{ responseData }}</p> -->
+      </v-alert>
+      <v-btn
+        v-on:click="sendEmail()"
+        tile
+        color="primary"
+      >
+        Send email
+      </v-btn>
+    </div>   
+  </v-app>
+</div>

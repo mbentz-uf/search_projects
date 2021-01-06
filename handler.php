@@ -31,6 +31,9 @@ switch ($function) {
     case 'getAllData':
         $EM->getAllData($data);
         break;
+    case 'sendEmail';
+        $EM->sendEmail($data);
+        break;
 }
 
 // Works

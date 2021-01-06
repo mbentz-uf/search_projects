@@ -14,11 +14,19 @@
         }
     ],
     "links": {
+        "project": [
+            {
+                "name": "Email Data",
+                "key": "emailData",
+                "icon": "fas fa-at",
+                "url": "pages/email.php"
+            }
+        ],
         "control-center": [
             {
                "name": "Search",
                "icon": "fas fa-search",
-               "url": "pages/index.php"
+               "url": "pages/search.php"
             }
          ]
     }

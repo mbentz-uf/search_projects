@@ -20,6 +20,15 @@ class ExternalModule extends AbstractExternalModule
     // Neither does redcap_control_center
     function redcap_every_page_top()
     {
+        $project_settings = $this->framework->getProjectSettings();
+        
+        // Limit this to projects where this is activated
+        if (!$project_settings['active']['value']) {
+            return;
+        }
+
+
+        // echo 'hello world';
         /*
          * Inline JS
             ?>
@@ -32,6 +41,11 @@ class ExternalModule extends AbstractExternalModule
             </script>
             <?php
         */
+    }
+
+    function createProject()
+    {
+        // REDCap::
     }
 
     function getAllData($data = '')
@@ -182,21 +196,48 @@ class ExternalModule extends AbstractExternalModule
         return $response;
     }
 
-    function renderHTML()
+    function renderEmailPage()
+    {
+        $this->initializeJavascriptModuleObject();
+        $this->tt_addToJavascriptModuleObject('ajaxPage', json_encode($this->framework->getUrl("handler.php")));
+        $this->includeVue();
+        $this->includeSource('js/email.js');
+        include('html/email.html');
+    }
+
+    function renderSearchPage()
     {
         $this->initializeJavascriptModuleObject();
         // TODO: This page does not exist from a control center page
         $this->tt_addToJavascriptModuleObject('ajaxPage', json_encode($this->framework->getUrl("handler.php")));
-        $this->includeResources('js/app.js');
-        include('html/app.html');
+        $this->includeVue();
+        $this->includeSource('js/search.js');
+        include('html/search.html');
     }
 
-    function includeResources($path)
+    function sendEmail($data = '')
+    {
+        $response = (object)[];
+        try {
+            $response->data = REDCap::email('micbentz@gmail.com', 'donotreply@localhost.edu', 'sample email', 'sample text');
+        } catch (Exception $e) {
+            $response->error = $e;
+        }
+
+        echo json_encode($response);
+        return $response;
+    }
+
+    function includeVue()
     {
         echo '<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">';
         echo '<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">';
         echo '<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>';
         echo '<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>';
+    }
+
+    function includeSource($path)
+    {
         echo '<script src="' . $this->getUrl($path) . '"></script>';
     }
 
