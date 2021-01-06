@@ -8,6 +8,6 @@ $title = RCView::img(['src' => APP_PATH_IMAGES . 'bell.png']) . ' ' . REDCap::es
 // $element = RCView::h4(['id' => 'app'], $title);
 // echo $element;
 
-$module->renderHTML();
+$module->renderSearchPage();
 
 require_once APP_PATH_DOCROOT . 'ControlCenter/footer.php';
