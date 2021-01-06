@@ -1,5 +1,32 @@
 <div id="app">
   <v-app>
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <v-card>
+        <v-card-title class="headline grey lighten-2">
+          Project {{ currentParams.pid }} Metadata
+        </v-card-title>
+
+        <v-card-text>
+          {{ dialogResponseData }}
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer style="visibility: hidden;"></v-spacer>
+          <div class="text-end">
+            <v-btn
+                color="primary"
+                text
+                @click="dialog = false"
+              >
+                Close
+            </v-btn>
+          </div>
+       </v-card-actions>
+      </v-card>
+    </v-dialog>
     <div>
       <section id="request_info_metadata">
         <v-alert
@@ -9,11 +36,13 @@
           type="info">
           <p>Send requests to: {{ url }}</p>
           <p>Query Params: {{ currentParams }} </p>
+          <!-- <p>{{ responseData }}</p> -->
         </v-alert>
       </section>
       <section>
         <v-card>
           <v-card-title class="text-center justify-center py-6">
+            <!-- <h1 v-on:click="doThis($event)" class="font-weight-bold display-3"> -->
             <h1 class="font-weight-bold display-3">
               Search
             </h1>
@@ -50,13 +79,16 @@
                 :headers="getHeaders"
                 :items="responseData"
                 class="elevation-1"
-                :loading="isLoading"
                 hide-default-footer
+                :loading="isLoading"
                 :page.sync="page"
                 :items-per-page="itemsPerPage"
                 :search="search"
                 @page-count="pageCount = $event"
               >
+                <template v-if="title == 'projects'" v-slot:item.project_id="{ item }">
+                  <td v-on:click="showProjectInfo(item.project_id)" class="text-start">{{ item.project_id }}</td>
+                </template>
                 <template v-slot:item.url="{ item }">
                   <a :href="item.url" target="_blank">Link</a>
                 </template>

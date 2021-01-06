@@ -11,9 +11,11 @@ $(document).ready(function () {
       return {
         currentParams: {
           data: '',
+          dialogFunction: '',
           function: fModules,
           pid: '',
         },
+        dialog: false,
         filterMapping: {},
         filterParams: {
           event: '',
@@ -24,15 +26,16 @@ $(document).ready(function () {
         initiatedRequest: false,
         itemsPerPage: 10,
         handlerFunctions: [
-          { 'value': fEvents, 'text': 'Events' },
-          { 'value': fModules, 'text': 'Modules' },
-          { 'value': fProjects, 'text': 'Projects' },
-          { 'value': fTemplates, 'text': 'Templates' },
+          { 'value': fEvents, 'text': 'events' },
+          { 'value': fModules, 'text': 'modules' },
+          { 'value': fProjects, 'text': 'projects' },
+          { 'value': fTemplates, 'text': 'templates' },
         ],
         headerMappinp: {},
         module: ExternalModules['SP'].ExternalModule,
         page: 1,
         pageCount: 0,
+        dialogResponseData: [],
         responseData: [],
         search: '',
         tab: null,
@@ -140,10 +143,12 @@ $(document).ready(function () {
         var result = source.indexOf(target) >= 0;
         return result; 
       },
+      // TODO: Change the dependency on currentParams.function for determining which filter to display
       getFilters: function() {
         var temp = this.filterMapping[this.currentParams.function];
         return temp;
       },
+      // TODO: Change the dependency on currentParams.function for determining which header to display
       getHeaders: function() {
         var temp = this.headerMapping[this.currentParams.function];
         return temp;
@@ -169,20 +174,21 @@ $(document).ready(function () {
       }
     },
     methods: {
-      // clear: function () {
-      //   this.data = '';
-      // },
       updateFunction: function () {
         this.currentParams.function = this.handlerFunctions[this.tab].value;
         this.responseData = [];
-        this.getData();
+        this.getData({
+          data: this.currentParams.data,
+          function: this.currentParams.function,
+          pid: null
+        }, "responseData");
       },
-      getData: function () {
+      getData: function (params, targetData, openDialog = false) {
         var self = this;
         self.initiatedRequest = true;
         $.get({
           url: self.url,
-          data: { ...self.currentParams }
+          data: {...params}//{ ...self.currentParams }
         }).done(function (response) {
           // console.log(response, response.data);
           response = self.parseJSON(response);
@@ -191,7 +197,11 @@ $(document).ready(function () {
             return;
           }
           self.initiatedRequest = false;
-          self.responseData = response.data;
+          self[targetData] = response.data;
+          if (openDialog) {
+            self.dialog = true;
+          }
+          // console.log(self[targetData]);
           // console.log(typeof self.responseData, self.responseData);
         });
       },
@@ -204,10 +214,19 @@ $(document).ready(function () {
           this.initiatedRequest = false;
         }
       },
+      showProjectInfo: function(pid) {
+        this.currentParams.pid = pid;
+        this.dialogResponseData = [];
+        this.getData({
+          data: this.currentParams.data,
+          function: 'getAllData',
+          pid: pid 
+        }, "dialogResponseData", true);
+      },
       urlParam: function (key) {
         const queryString = window.location.search;
         return new URLSearchParams(queryString).get(key);
       }
-    }
+    },
   });
 });
